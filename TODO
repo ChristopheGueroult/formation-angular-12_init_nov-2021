@@ -1,0 +1,12 @@
+
+Tp:
+  ✔ lazy lodaing pour clients et page not found (2 route sur app-routing) (pour page not found voir path dans la doc) @started(21-11-16 16:06) @done(21-11-16 16:16) @lasted(10m16s)
+  ✔ routes pour la partie clients (sur clients-routing) @done(21-11-16 16:16)
+  ✔ route pour la partie page not found (sur page-not-found-routing) @done(21-11-16 16:16)
+
+Tp:
+  ✔ faire la vue page list clients (en prenant ex sur page list orders) @done(21-11-16 16:17)
+  ✔ idem pour la vue page not found @done(21-11-16 16:17)
+
+Tp:
+  ✔ Déplacer les routes sign-in, sign-up, reset, forgot sur login-routing (et corriger le code pour que ça marche, regarder dans la console config du router) @done(21-11-16 17:01)
