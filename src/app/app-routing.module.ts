@@ -11,6 +11,11 @@ const routes: Routes = [
   { path: 'sign-up', component: PageSignUpComponent },
   { path: 'reset', component: PageResetComponent },
   { path: 'forgot', component: PageForgotComponent },
+  {
+    path: 'orders',
+    loadChildren: () =>
+      import('./orders/orders.module').then((m) => m.OrdersModule),
+  },
 ];
 
 @NgModule({
