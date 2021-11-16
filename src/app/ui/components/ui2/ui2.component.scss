@@ -1,0 +1,14 @@
+.ui {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  div:nth-child(1) {
+    background: var(--app-darklight2);
+  }
+  div:nth-child(3) {
+    flex-grow: 1;
+  }
+  div:nth-child(4) {
+    background: var(--app-dark);
+  }
+}
