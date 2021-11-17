@@ -10,3 +10,17 @@ Tp:
 
 Tp:
   ✔ Déplacer les routes sign-in, sign-up, reset, forgot sur login-routing (et corriger le code pour que ça marche, regarder dans la console config du router) @done(21-11-16 17:01)
+
+Tp:
+  ☐ enum client (ACTIVE INACTIVE)
+  ☐ interface client-i
+  ☐ le model (class) client (val par defaut: 0 pour le  totalCaHt, 20 pour tva, StateClient.ACTIVE pour le state)
+  ☐ le service clients
+  ☐ page list clients en utilisant le meme tableau, le meme bouton, le meme pipe
+
+  ☐ pour l'affichage des headers clients :
+    ☐ Name
+    ☐ total ht (déjà dans le model de donnée)
+    ☐ Taux tva (déjà dans le model)
+    ☐ Total ttc (à calculer en réutilisant le pipe total)
+    ☐ State
