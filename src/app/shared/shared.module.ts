@@ -1,12 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TabLightComponent } from './components/tab-light/tab-light.component';
-import { BtnRouteComponent } from './components/btn-route/btn-route.component';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { IconsModule } from '../icons/icons.module';
 import { TemplatesModule } from '../templates/templates.module';
-import { TotalPipe } from './pipes/total.pipe';
+import { BtnRouteComponent } from './components/btn-route/btn-route.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { TabLightComponent } from './components/tab-light/tab-light.component';
 import { StateDirective } from './directives/state.directive';
-import { RouterModule } from '@angular/router';
+import { TotalPipe } from './pipes/total.pipe';
 
 @NgModule({
   declarations: [
@@ -14,13 +16,16 @@ import { RouterModule } from '@angular/router';
     BtnRouteComponent,
     TotalPipe,
     StateDirective,
+    DialogComponent,
   ],
   imports: [CommonModule, RouterModule],
   exports: [
-    TabLightComponent,
-    BtnRouteComponent,
     IconsModule,
     TemplatesModule,
+    ReactiveFormsModule,
+    TabLightComponent,
+    BtnRouteComponent,
+    DialogComponent,
     TotalPipe,
     StateDirective,
   ],

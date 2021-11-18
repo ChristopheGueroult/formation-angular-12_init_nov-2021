@@ -14,6 +14,7 @@ export class PageListOrdersComponent implements OnInit {
   public title = 'List orders';
   public collection$!: Observable<Order[]>;
   public headers: string[];
+  public msg$ = this.ordersService.msg$;
   constructor(private ordersService: OrdersService) {
     this.headers = [
       'Type',
@@ -26,7 +27,7 @@ export class PageListOrdersComponent implements OnInit {
     ];
     this.collection$ = this.ordersService.collection;
     // this.ordersService.collection.subscribe((data) => {
-    //   this.collection = data;
+    //   console.log(data);
     // });
   }
 

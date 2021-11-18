@@ -13,4 +13,10 @@ export class Client implements ClientI {
       Object.assign(this, obj);
     }
   }
+  public totalHT(): number {
+    return this.totalCaHt;
+  }
+  public totalTTC(): number {
+    return this.totalCaHt * (1 + this.tva / 100);
+  }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, Subject, tap } from 'rxjs';
 import { StateOrder } from 'src/app/core/enums/state-order';
 import { Order } from 'src/app/core/models/order';
 import { environment } from 'src/environments/environment';
@@ -9,6 +9,10 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class OrdersService {
+  /**
+   * property msg to display dialog box in views
+   */
+  public msg$ = new Subject<string | null>();
   /**
    * property collection
    */
@@ -22,7 +26,12 @@ export class OrdersService {
    * @param http inject HttpClient to to calls api
    */
   constructor(private http: HttpClient) {
-    this.collection = this.http.get<Order[]>(`${this.urlApi}/orders`);
+    this.collection = this.http.get<Order[]>(`${this.urlApi}/orders`).pipe(
+      tap((data) => console.log(data)),
+      map((tab) => {
+        return tab.map((obj) => new Order(obj));
+      })
+    );
   }
 
   /**
@@ -56,13 +65,28 @@ export class OrdersService {
    * update item in collection
    */
   public update(item: Order): Observable<Order> {
-    return this.http.put<Order>(`${this.urlApi}/orders/${item.id}`, item);
+    return this.http.put<Order>(`${this.urlApi}/orders/${item.id}`, item).pipe(
+      tap((data) => {
+        // if data ok
+        this.msg$.next(
+          `La commande pour le client ${item.client} a bien été modifié`
+        );
+        setTimeout(() => {
+          this.msg$.next(null);
+        }, 2000);
+      })
+    );
   }
 
   /**
    * @funtion
    * add item in collection
    */
+  public add(item: Order): Observable<Order> {
+    return this.http
+      .post<Order>(`${this.urlApi}/orders`, item)
+      .pipe(tap((data) => {}));
+  }
 
   /**
    * @funtion

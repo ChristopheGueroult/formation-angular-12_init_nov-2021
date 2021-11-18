@@ -7,4 +7,6 @@ export interface ClientI {
   id: number;
   name: string;
   comment: string;
+  totalHT(): number;
+  totalTTC(): number;
 }

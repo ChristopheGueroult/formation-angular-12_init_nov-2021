@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { StateClient } from 'src/app/core/enums/state-client';
 import { Client } from 'src/app/core/models/client';
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,9 @@ export class ClientsService {
    * @param http inject HttpClient to to calls api
    */
   constructor(private http: HttpClient) {
-    this.collection = this.http.get<Client[]>(`${this.urlApi}/clients`);
+    this.collection = this.http
+      .get<Client[]>(`${this.urlApi}/clients`)
+      .pipe(map((tab) => tab.map((obj) => new Client(obj))));
   }
 
   /**
