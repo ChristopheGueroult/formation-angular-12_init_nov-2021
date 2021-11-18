@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { StateClient } from 'src/app/core/enums/state-client';
 import { Client } from 'src/app/core/models/client';
 import { environment } from 'src/environments/environment';
 
@@ -44,11 +45,19 @@ export class ClientsService {
    * @funtion
    * change state item
    */
+  public changeState(item: Client, state: StateClient): Observable<Client> {
+    const obj = new Client(item);
+    obj.state = state;
+    return this.update(obj);
+  }
 
   /**
    * @funtion
    * update item in collection
    */
+  public update(item: Client): Observable<Client> {
+    return this.http.put<Client>(`${this.urlApi}/clients/${item.id}`, item);
+  }
 
   /**
    * @funtion
