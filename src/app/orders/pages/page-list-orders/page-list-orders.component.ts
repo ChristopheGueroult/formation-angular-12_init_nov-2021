@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { StateOrder } from 'src/app/core/enums/state-order';
 import { Order } from 'src/app/core/models/order';
 import { OrdersService } from '../../services/orders.service';
@@ -12,11 +13,12 @@ import { OrdersService } from '../../services/orders.service';
 export class PageListOrdersComponent implements OnInit {
   public states = Object.values(StateOrder);
   public title = 'List orders';
-  public collection$!: Observable<Order[]>;
+  public collection$!: Subject<Order[]>;
   public headers: string[];
   public msg$ = this.ordersService.msg$;
-  constructor(private ordersService: OrdersService) {
+  constructor(private ordersService: OrdersService, private router: Router) {
     this.headers = [
+      'Action',
       'Type',
       'Client',
       'Nb Jours',
@@ -26,12 +28,18 @@ export class PageListOrdersComponent implements OnInit {
       'State',
     ];
     this.collection$ = this.ordersService.collection;
-    // this.ordersService.collection.subscribe((data) => {
-    //   console.log(data);
-    // });
   }
 
   ngOnInit(): void {}
+
+  public goToEdit(item: Order): void {
+    this.router.navigate(['orders', 'edit', item.id]);
+  }
+
+  public deleteItem(item: Order): void {
+    this.ordersService.delete(item.id).subscribe();
+  }
+
   public changeState(item: Order, event: Event): void {
     const target = event.target as HTMLSelectElement;
     const state = target.value as StateOrder;

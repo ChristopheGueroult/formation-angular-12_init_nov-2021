@@ -1,6 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, Subject, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  Subject,
+  tap,
+} from 'rxjs';
+import { AbstractErrorHandler } from 'src/app/core/abstract-class/abstract-error-handler';
 import { StateOrder } from 'src/app/core/enums/state-order';
 import { Order } from 'src/app/core/models/order';
 import { environment } from 'src/environments/environment';
@@ -8,7 +16,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class OrdersService {
+export class OrdersService extends AbstractErrorHandler {
   /**
    * property msg to display dialog box in views
    */
@@ -16,7 +24,9 @@ export class OrdersService {
   /**
    * property collection
    */
-  private collection$!: Observable<Order[]>;
+  private collection$: BehaviorSubject<Order[]> = new BehaviorSubject<Order[]>(
+    []
+  );
   /**
    * property to get url api from environment or environment.prod
    */
@@ -26,28 +36,35 @@ export class OrdersService {
    * @param http inject HttpClient to to calls api
    */
   constructor(private http: HttpClient) {
-    this.collection = this.http.get<Order[]>(`${this.urlApi}/orders`).pipe(
-      tap((data) => console.log(data)),
-      map((tab) => {
-        return tab.map((obj) => new Order(obj));
-      })
-    );
+    super();
+    this.refreshCollection();
+  }
+
+  /**
+   * @funtion
+   * refresh collection
+   */
+  public refreshCollection(): void {
+    this.http
+      .get<Order[]>(`${this.urlApi}/orders`)
+      .pipe(
+        map((tab) => {
+          return tab.map((obj) => new Order(obj));
+        }),
+        catchError(this.handleError)
+      )
+      .subscribe((data) => {
+        this.collection$.next(data);
+      });
   }
 
   /**
    * @funtion
    * get collection
    */
-  public get collection(): Observable<Order[]> {
+  public get collection(): BehaviorSubject<Order[]> {
+    this.refreshCollection();
     return this.collection$;
-  }
-
-  /**
-   * @funtion
-   * set collection
-   */
-  public set collection(col: Observable<Order[]>) {
-    this.collection$ = col;
   }
 
   /**
@@ -68,13 +85,15 @@ export class OrdersService {
     return this.http.put<Order>(`${this.urlApi}/orders/${item.id}`, item).pipe(
       tap((data) => {
         // if data ok
+        this.refreshCollection();
         this.msg$.next(
           `La commande pour le client ${item.client} a bien été modifié`
         );
         setTimeout(() => {
           this.msg$.next(null);
         }, 2000);
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
@@ -83,18 +102,35 @@ export class OrdersService {
    * add item in collection
    */
   public add(item: Order): Observable<Order> {
-    return this.http
-      .post<Order>(`${this.urlApi}/orders`, item)
-      .pipe(tap((data) => {}));
+    return this.http.post<Order>(`${this.urlApi}/orders`, item).pipe(
+      tap((data) => {
+        this.refreshCollection();
+      }),
+      catchError(this.handleError)
+    );
   }
 
   /**
    * @funtion
    * delete item in collection
    */
+  public delete(id: number): Observable<Order> {
+    return this.http.delete<Order>(`${this.urlApi}/orders/${id}`).pipe(
+      tap(() => {
+        this.refreshCollection();
+      }),
+      catchError(this.handleError)
+    );
+  }
 
   /**
    * @funtion
    * get item by id
    */
+  public getItemById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.urlApi}/orders/${id}`).pipe(
+      tap((data) => {}),
+      catchError(this.handleError)
+    );
+  }
 }
